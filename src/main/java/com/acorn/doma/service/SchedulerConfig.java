@@ -34,25 +34,24 @@ import com.acorn.doma.proj4j.CoordinateConverter;
 @Component
 @EnableScheduling
 public class SchedulerConfig implements PLog{
-	private final String serverId;
+//	private final String serverId;
     private final String serviceKey;
     private final AccMapper accMapper;
 
 
     @Autowired
-    public SchedulerConfig(AccMapper accMapper, @Value("${server.id}") String serverId,@Qualifier("accInfoServiceKey") String serviceKey) {
+    public SchedulerConfig(AccMapper accMapper, @Qualifier("accInfoServiceKey") String serviceKey) {
         this.accMapper = accMapper;
-        this.serverId = serverId;
         this.serviceKey = serviceKey;
     }
-	@PostConstruct
-    public void init() {
-        System.out.println("Server ID: " + serverId);
-    }
+//    public SchedulerConfig(AccMapper accMapper, @Value("${server.id}") String serverId,@Qualifier("accInfoServiceKey") String serviceKey) {
+//        this.accMapper = accMapper;
+//        this.serverId = serverId;
+//        this.serviceKey = serviceKey;
+//    }	
 
 	@Scheduled(fixedDelay = 60000)
     public void insertAccidentData() {
-        if ("server1".equals(serverId)) {
             int retryCount = 0;
             int maxRetries = 3; // 최대 재시도 횟수
             int retryDelay = 10000; // 재시도 지연 시간 (밀리초)
@@ -111,9 +110,6 @@ public class SchedulerConfig implements PLog{
                     System.out.println("최대 재시도 횟수에 도달했습니다. API 연동 불가.");
                 }
             }
-        } else {
-            System.out.println("해당 서버에서는 실시간 돌발 정보를 가져오지 못합니다.");
-        }
     }
 
 	public String fetchDataFromApi() throws IOException {
